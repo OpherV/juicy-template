@@ -35,6 +35,95 @@ function tick() {
 
 
 document.addEventListener("DOMContentLoaded",function(){
-    tick();
-    setupParticles();
+    //tick();
+    //setupParticles();
+
+    runPhysics();
+    Physics.util.ticker.start();
+
 });
+
+function runPhysics() {
+    Physics(function () {
+        var world = this;
+
+        var physicsEl = document.querySelector("#contact");
+        var pebr = physicsEl.getBoundingClientRect();
+        var viewWidth = physicsEl.offsetWidth;
+        var viewHeight = physicsEl.offsetHeight;
+
+        var viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
+
+
+        var formElements = physicsEl.querySelectorAll('label, input, textarea');
+        var physicsElements = [];
+
+
+        for (var x = 0; x < formElements.length; x++) {
+            var el = formElements[x];
+            var elbr = el.getBoundingClientRect();
+            var myEL = Physics.body('rectangle', {
+                x: elbr.left + elbr.width/2 - pebr.left,
+                y: elbr.top + elbr.height/2 - pebr.top,
+                width: elbr.width,
+                height: elbr.height,
+                cof: 0.99,
+                restitution: 0.99,
+                //fixed: true
+                //vx: Math.random() * 0.1,
+                //vy: Math.random() * 0.1,
+            });
+            //myEL.view = el;
+            world.add(myEL);
+
+            physicsElements.push(el);
+        }
+
+        world.add([
+            Physics.behavior('constant-acceleration')
+            ,Physics.behavior('body-impulse-response')
+            ,Physics.behavior('body-collision-detection')
+            ,Physics.behavior('sweep-prune')
+            ,Physics.behavior('edge-collision-detection', {
+                aabb: viewportBounds,
+                restitution: 0.2,
+                cof: 0.99
+            })
+        ]);
+
+
+        var attractor = Physics.behavior('attractor', {
+            order: 0,
+            strength: -.0002
+        });
+
+        attractor.position({
+            x: viewWidth/3,
+            y: viewHeight/2
+        }) ;
+
+        world.add( attractor );
+
+
+
+        var renderer = Physics.renderer('canvas', {
+            el: 'viewport',
+            width: viewWidth,
+            height: viewHeight,
+            meta: false // don't display meta data
+        });
+
+        // add the renderer
+        world.add(renderer);
+        // render on each step
+        world.on('step', function () {
+            world.render();
+        });
+
+        Physics.util.ticker.on(function (time) {
+            world.step(time);
+        });
+
+
+    });
+}

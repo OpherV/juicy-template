@@ -47,7 +47,7 @@ function runPhysics() {
     Physics(function () {
         var world = this;
 
-        var physicsEl = document.querySelector("#contact");
+        var physicsEl = document.querySelector("#contact .container");
         var pebr = physicsEl.getBoundingClientRect();
         var viewWidth = physicsEl.offsetWidth;
         var viewHeight = physicsEl.offsetHeight;
@@ -63,17 +63,15 @@ function runPhysics() {
             var el = formElements[x];
             var elbr = el.getBoundingClientRect();
             var myEL = Physics.body('rectangle', {
-                x: elbr.left + elbr.width/2 - pebr.left,
-                y: elbr.top + elbr.height/2 - pebr.top,
-                width: elbr.width,
-                height: elbr.height,
+                width: elbr.width/2,
+                height: elbr.height/2,
                 cof: 0.99,
                 restitution: 0.99,
                 //fixed: true
                 //vx: Math.random() * 0.1,
                 //vy: Math.random() * 0.1,
             });
-            //myEL.view = el;
+            myEL.view = el;
             world.add(myEL);
 
             physicsElements.push(el);
@@ -94,20 +92,20 @@ function runPhysics() {
 
         var attractor = Physics.behavior('attractor', {
             order: 0,
-            strength: -.0002
+            strength: -.0009
         });
 
         attractor.position({
-            x: viewWidth/3,
+            x: viewWidth/2,
             y: viewHeight/2
         }) ;
 
-        world.add( attractor );
+        //world.add( attractor );
 
 
 
-        var renderer = Physics.renderer('canvas', {
-            el: 'viewport',
+        var renderer = Physics.renderer('dom', {
+            el: physicsEl,
             width: viewWidth,
             height: viewHeight,
             meta: false // don't display meta data

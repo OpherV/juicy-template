@@ -1,3 +1,7 @@
+body{
+    overflow-x: hidden;
+}
+
 .btn-primary{
     position: relative;
 }
@@ -27,6 +31,22 @@ header video{
     position: relative;
 }
 
+#contact .container{
+    position: relative;
+    z-index: 2;
+}
+
+#contact:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/concrete_seamless.png");
+    z-index: 1;
+}
+
 .formContainer{
     position: relative;
 }
@@ -38,4 +58,42 @@ header video{
     width: 100%;
     height: 100%;
     pointer-events: none;
+}
+
+/* camera movement */
+.shake .container{
+    animation: shake 1s ease-in-out;
+    overflow: hidden;
+}
+
+.shake:after{
+    animation: shake 2s ease-in-out;
+    overflow: hidden;
+}
+
+@keyframes shake{
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    10% {
+        transform: translateX(6px) translateY(100px);
+    }
+    25% {
+        transform: translateX(-7px) translateY(-50px);
+    }
+    45% {
+        transform: translateX(4px) translateY(50px);
+    }
+    60% {
+        transform: translateX(-2px) translateY(-10px);
+    }
+    75% {
+        transform: translateX(0px) translateY(5px);
+    }
+    85% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
 }

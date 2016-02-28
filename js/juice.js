@@ -38,8 +38,20 @@ document.addEventListener("DOMContentLoaded",function(){
     //tick();
     //setupParticles();
 
-    runPhysics();
-    Physics.util.ticker.start();
+    //runPhysics();
+    //Physics.util.ticker.start();
+
+    $('a.contact-link').bind('click', function(event) {
+        document.querySelector("#contact").classList.remove("shake");
+        var $anchor = $(this);
+        $('html, body').stop().animate({
+            scrollTop: ($($anchor.attr('href')).offset().top - 50),
+        }, 1500, 'easeInExpo',
+        function(){
+            document.querySelector("#contact").classList.add("shake");
+        });
+        event.preventDefault();
+    });
 
 });
 

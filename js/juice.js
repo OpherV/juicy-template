@@ -1,28 +1,48 @@
 var proton;
 
-function setupParticles(){
+function setupParticles(image){
     var canvas = document.body.querySelector(".particles");
     canvas.width = canvas.offsetWidth;
     canvas.height= canvas.offsetHeight;
 
+    var originalRate = new Proton.Rate(new Proton.Span(1, 3), .1);
+    var originalLife = new Proton.Life(1, 4);
+
     proton = new Proton;
     var emitter = new Proton.Emitter();
-    emitter.rate = new Proton.Rate(new Proton.Span(5, 5), .1);
-    emitter.addInitialize(new Proton.Mass(0.2));
-    //emitter.addInitialize(new Proton.ImageTarget(image));
-    emitter.addInitialize(new Proton.Position(new Proton.PointZone(canvas.offsetWidth / 2, canvas.offsetHeight / 2)));
-    emitter.addInitialize(new Proton.Life(1, 5));
-    emitter.addInitialize(new Proton.V(new Proton.Span(0.1, 0.3), new Proton.Span(0, 360), 'polar'));
-    emitter.addBehaviour(new Proton.Color('#ff0000', '#ff4400'));
+    emitter.rate = originalRate;
+    emitter.addInitialize(new Proton.Mass(0.1));
+    emitter.addInitialize(new Proton.ImageTarget(image));
+    emitter.addInitialize(new Proton.Position(new Proton.RectZone(canvas.offsetWidth / 2 - 70, canvas.offsetHeight / 2 - 15 , 140, 30)));
+    emitter.addInitialize(originalLife);
+    emitter.addInitialize(new Proton.V(new Proton.Span(0.2, 0.6), new Proton.Span(0, 360), 'polar'));
+    emitter.addBehaviour(new Proton.Color('#eee3ff', '#ff4400'));
+    emitter.addBehaviour(new Proton.RandomDrift(1, 1, 1));
     //attractionForce = new Proton.Attraction(mouseObj, 10, 200);
     //emitter.addBehaviour(attractionForce);
-    emitter.addBehaviour(new Proton.Scale(Proton.getSpan(1, 1.6), Proton.getSpan(0, .1)));
+    emitter.addBehaviour(new Proton.Scale(Proton.getSpan(0.2, 0.5), Proton.getSpan(0, .1)));
     emitter.addBehaviour(new Proton.Alpha(1, .2));
     emitter.emit();
     proton.addEmitter(emitter);
     renderer = new Proton.Renderer('webgl', proton, canvas);
     renderer.blendFunc("SRC_ALPHA", "ONE");
     renderer.start();
+
+    document.querySelector(".particleContainer a").addEventListener("mouseenter",function(){
+        emitter.rate = new Proton.Rate(new Proton.Span(1, 3), .01);
+        emitter.addBehaviour(new Proton.Scale(Proton.getSpan(0.4, 0.5), Proton.getSpan(0, .1)));
+        emitter.addInitialize(new Proton.V(new Proton.Span(0.3, 0.6), new Proton.Span(0, 360), 'polar'));
+        emitter.addBehaviour(new Proton.Color('#fff7dd', '#ff4400'));
+    });
+
+    document.querySelector(".particleContainer a").addEventListener("mouseleave",function(){
+        emitter.rate = originalRate;
+        emitter.addBehaviour(new Proton.Scale(Proton.getSpan(0.2, 0.5), Proton.getSpan(0, .1)));
+        emitter.addInitialize(new Proton.V(new Proton.Span(0.2, 0.6), new Proton.Span(0, 360), 'polar'));
+        emitter.addBehaviour(new Proton.Color('#eee3ff', '#ff4400'));
+    })
+
+
 }
 
 
@@ -35,8 +55,13 @@ function tick() {
 
 
 document.addEventListener("DOMContentLoaded",function(){
-    //tick();
-    //setupParticles();
+    var image = new Image()
+    image.onload = function(e) {
+        setupParticles(e.target);
+        tick();
+    };
+    image.src = 'img/particle.png';
+
 
     //runPhysics();
     //Physics.util.ticker.start();

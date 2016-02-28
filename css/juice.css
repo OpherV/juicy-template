@@ -2,9 +2,6 @@ body{
     overflow-x: hidden;
 }
 
-.btn-primary{
-    position: relative;
-}
 
 header{
     position: relative;
@@ -19,12 +16,30 @@ header video{
     object-fit: cover;
 }
 
+
+.particleContainer{
+    position: relative;
+}
+
+.particleContainer a{
+    background: #eee3ff;
+    color: #460b1b;
+    position: relative;
+    z-index: 2;
+}
+
+.particleContainer a:hover{
+    background: #a494bd;
+}
+
+
 .particles{
     position: absolute;
     left: calc(50% - 150px);
     top: calc(50% - 150px);
     width: 300px;
     height: 300px;
+    z-index: 1;
 }
 
 #contact{

@@ -63,8 +63,8 @@ document.addEventListener("DOMContentLoaded",function(){
     image.src = 'img/particle.png';
 
 
-    //runPhysics();
-    //Physics.util.ticker.start();
+    runPhysics();
+    Physics.util.ticker.start();
 
     $('a.contact-link').bind('click', function(event) {
         document.querySelector("#contact").classList.remove("shake");
@@ -84,10 +84,10 @@ function runPhysics() {
     Physics(function () {
         var world = this;
 
-        var physicsEl = document.querySelector("#contact .container");
+        var physicsEl = document.querySelector("#physicsForm");
         var pebr = physicsEl.getBoundingClientRect();
-        var viewWidth = physicsEl.offsetWidth;
-        var viewHeight = physicsEl.offsetHeight;
+        var viewWidth = pebr.width;
+        var viewHeight = pebr.height;
 
         var viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
 
@@ -99,15 +99,23 @@ function runPhysics() {
         for (var x = 0; x < formElements.length; x++) {
             var el = formElements[x];
             var elbr = el.getBoundingClientRect();
-            var myEL = Physics.body('rectangle', {
-                width: elbr.width/2,
-                height: elbr.height/2,
-                cof: 0.99,
-                restitution: 0.99,
-                //fixed: true
-                //vx: Math.random() * 0.1,
-                //vy: Math.random() * 0.1,
+
+            var properties = getElementProperties(el);
+
+            var myEL = Physics.body('convex-polygon', {
+                x: el.offsetLeft + elbr.width/2,
+                y: el.offsetTop + elbr.height/2,
+                vertices: [
+                    { x: 0, y: 0 },
+                    { x: elbr.width, y: 0 },
+                    { x: elbr.width, y: elbr.height },
+                    { x: 0, y: properties[3] }
+                ]
             });
+            el.style.position = "absolute";
+            el.style.top = 0;
+            el.style.left = 0;
+
             myEL.view = el;
             world.add(myEL);
 
@@ -126,18 +134,18 @@ function runPhysics() {
             })
         ]);
 
-
+        //
         var attractor = Physics.behavior('attractor', {
             order: 0,
-            strength: -.0009
+            strength: -.003
         });
 
         attractor.position({
             x: viewWidth/2,
-            y: viewHeight/2
+            y: 100
         }) ;
 
-        //world.add( attractor );
+        world.add( attractor );
 
 
 
@@ -145,6 +153,7 @@ function runPhysics() {
             el: physicsEl,
             width: viewWidth,
             height: viewHeight,
+            //autoResize: false,
             meta: false // don't display meta data
         });
 
@@ -161,4 +170,22 @@ function runPhysics() {
 
 
     });
+
+    function getElementProperties( element ) {
+
+        var x = 0;
+        var y = 0;
+        var width = element.offsetWidth;
+        var height = element.offsetHeight;
+
+        do {
+
+            x += element.offsetLeft;
+            y += element.offsetTop;
+
+        } while ( element = element.offsetParent );
+
+        return [ x, y, width, height ];
+    }
+
 }

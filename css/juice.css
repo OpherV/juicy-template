@@ -23,6 +23,8 @@ header{
     opacity: 1;
 }
 
+/* particles */
+
 .particleContainer{
     position: relative;
 }
@@ -54,8 +56,11 @@ header{
     opacity: 1;
 }
 
+/* physics */
+
 #contact{
     position: relative;
+    padding-bottom: 0;
 }
 
 #contact .container{
@@ -74,9 +79,54 @@ header{
     z-index: 1;
 }
 
+
+.pjs-layer-main{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#physicsForm{
+    background: rgba(0,255,0,0.3);
+    padding-bottom: 10rem;
+    width: 100%;
+}
+
 .formContainer{
     position: relative;
+    /*margin-bottom: 10rem;*/
 }
+
+.formContainer label{
+    margin: 0;
+}
+
+.formContainer .row{
+    margin: 2rem;
+}
+
+.formContainer .col1{
+    display: inline-block;
+    width: 10rem;
+    vertical-align: top;
+
+}
+.formContainer .col2{
+    display: inline-block;
+    width: 25rem;
+}
+
+.formContainer input{
+    transition: none;
+}
+
+
+.formContainer .label, .formContainer .input{
+    margin: 0;
+}
+
 
 #viewport{
     position: absolute;
@@ -88,6 +138,7 @@ header{
 }
 
 /* camera movement */
+
 .shake .container{
     animation: shake 1s ease-in-out;
     overflow: hidden;

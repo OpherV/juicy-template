@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="css/juice.css" type="text/css">
 </head>
 
-<body id="page-top">
+<body id="page-top" class="">
 
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -73,7 +73,7 @@
         <!-- /.container-fluid -->
     </nav>
     <header>
-        <video muted autoplay loop>
+        <video muted autoplay loop class="breathingAnimation">
             <source src="video/breathinganimation.mp4" type="video/mp4">
         </video>
         <div class="header-content">
@@ -296,6 +296,13 @@
         </div>
     </section>
 
+    <div class="optionsModal noselect">
+        <div class="row breathingAnimationOption"><input type="checkbox"> Breathing animation</div>
+        <div class="row particlesOption"><input type="checkbox"> Particles</div>
+        <div class="row cameraMovementOption"><input type="checkbox"> Camera Movement</div>
+        <div class="row physicsOption"><input type="checkbox"> Physics</div>
+    </div>
+
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
@@ -315,6 +322,7 @@
     <script src="bower_components/Proton/build/proton-1.0.0.js"></script>
     <script src="bower_components/PhysicsJS/dist/physicsjs-full.js"></script>
     <script src="js/juice.js"></script>
+    <script src="js/juiceGui.js"></script>
 
 </body>
 

@@ -7,28 +7,34 @@ header{
     position: relative;
 }
 
-header video{
+.breathingAnimation{
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
     object-fit: cover;
+    opacity: 0;
+    transition: all 0.3s ease-in;
 }
 
+
+.breathingAnimationOn .breathingAnimation{
+    opacity: 1;
+}
 
 .particleContainer{
     position: relative;
 }
 
-.particleContainer a{
+.particlesOn .particleContainer a{
     background: #eee3ff;
     color: #460b1b;
     position: relative;
     z-index: 2;
 }
 
-.particleContainer a:hover{
+.particlesOn .particleContainer a:hover{
     background: #a494bd;
 }
 
@@ -40,6 +46,12 @@ header video{
     width: 300px;
     height: 300px;
     z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.particlesOn .particles{
+    opacity: 1;
 }
 
 #contact{
@@ -111,4 +123,66 @@ header video{
     100% {
         transform: translateX(0) translateY(0);
     }
+}
+
+/* options */
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+body:before{
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+
+    background: rgba(255,255,255,0.9);
+
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in;
+}
+
+body.showOptions:before{
+    opacity: 1;
+    pointer-events: all;
+}
+
+.optionsModal{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 25rem;
+    height: 16rem;
+    z-index: 110;
+    background: rgba(0,0,0,0.5);
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 3rem;
+
+    padding: 1rem;
+    color: white;
+    font-family: "Open Sans";
+    transition: all 0.3s ease-in;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.showOptions .optionsModal{
+    opacity: 1;
+    pointer-events: all;
+}
+
+.optionsModal .row{
+    margin: 1rem;
 }

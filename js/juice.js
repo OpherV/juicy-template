@@ -53,6 +53,7 @@ function tick() {
     }
 }
 
+cameraMovement = false;
 
 document.addEventListener("DOMContentLoaded",function(){
     var image = new Image()
@@ -63,36 +64,81 @@ document.addEventListener("DOMContentLoaded",function(){
     image.src = 'img/particle.png';
 
 
-    runPhysics();
-    Physics.util.ticker.start();
-
     $('a.contact-link').bind('click', function(event) {
         document.querySelector("#contact").classList.remove("shake");
         var $anchor = $(this);
         $('html, body').stop().animate({
-            scrollTop: ($($anchor.attr('href')).offset().top - 50),
+            scrollTop: ($($anchor.attr('href')).offset().top),
         }, 1500, 'easeInExpo',
         function(){
-            document.querySelector("#contact").classList.add("shake");
+            if (cameraMovement) {
+                document.querySelector("#contact").classList.add("shake");
+            }
         });
         event.preventDefault();
     });
 
 });
 
+
+
+var canFormBreak = false;
+var physicsOn = true;
+var formBroken = false;
+var physicsEl = document.querySelector("#contact");
+var formElements = physicsEl.querySelectorAll('label, input, textarea');
+
+document.querySelector("input.email").addEventListener("change",function(){
+    if (this.value.indexOf("@")==-1){
+        this.classList.add("invalid");
+        if (canFormBreak){
+            breakForm();
+        }
+
+    }
+    else{
+        this.classList.remove("invalid");
+    }
+});
+
+function breakForm(){
+    if (formBroken == false) {
+        runPhysics();
+        Physics.util.ticker.start();
+        setTimeout(function(){
+            fixForm();
+        }, 10000);
+    }
+    formBroken = true;
+}
+
+function fixForm(){
+    physicsOn = false;
+    for (var x=0;x<formElements.length;x++){
+        var el = formElements[x];
+        el.style.transform = "translateX(0) translateY(0) rotate(0)";
+        el.style.top = el.originalTop+"px";
+        el.style.left = el.originalLeft+"px";
+        el.style.transition = "all 1.2s ease-in";
+    }
+};
+
 function runPhysics() {
     Physics(function () {
         var world = this;
 
-        var physicsEl = document.querySelector("#physicsForm");
         var pebr = physicsEl.getBoundingClientRect();
         var viewWidth = pebr.width;
         var viewHeight = pebr.height;
 
+        var w = window,
+            d = document,
+            e = d.documentElement,
+            g = d.getElementsByTagName('body')[0],
+            windowWidth = w.innerWidth || e.clientWidth || g.clientWidth,
+            windowHeight = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
         var viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
-
-
-        var formElements = physicsEl.querySelectorAll('label, input, textarea');
         var physicsElements = [];
 
 
@@ -102,15 +148,19 @@ function runPhysics() {
 
             var properties = getElementProperties(el);
 
+            el.originalLeft = $(el).offset().left - $(physicsEl).offset().left;
+            el.originalTop= $(el).offset().top -  $(physicsEl).offset().top;
+
             var myEL = Physics.body('convex-polygon', {
-                x: el.offsetLeft + elbr.width/2,
-                y: el.offsetTop + elbr.height/2,
+                x: $(el).offset().left - $(physicsEl).offset().left + elbr.width/2,
+                y: $(el).offset().top -  $(physicsEl).offset().top  + elbr.height/2,
                 vertices: [
                     { x: 0, y: 0 },
                     { x: elbr.width, y: 0 },
                     { x: elbr.width, y: elbr.height },
                     { x: 0, y: properties[3] }
-                ]
+                ]     ,
+                treatment: "dynamic"
             });
             el.style.position = "absolute";
             el.style.top = 0;
@@ -137,15 +187,15 @@ function runPhysics() {
         //
         var attractor = Physics.behavior('attractor', {
             order: 0,
-            strength: -.003
+            strength: -.0003
         });
 
         attractor.position({
             x: viewWidth/2,
-            y: 100
+            y: 300
         }) ;
 
-        world.add( attractor );
+        //world.add( attractor );
 
 
 
@@ -153,7 +203,7 @@ function runPhysics() {
             el: physicsEl,
             width: viewWidth,
             height: viewHeight,
-            //autoResize: false,
+            autoResize: false,
             meta: false // don't display meta data
         });
 
@@ -165,7 +215,9 @@ function runPhysics() {
         });
 
         Physics.util.ticker.on(function (time) {
-            world.step(time);
+            if (physicsOn){
+                world.step(time);
+            }
         });
 
 
@@ -182,8 +234,9 @@ function runPhysics() {
 
             x += element.offsetLeft;
             y += element.offsetTop;
+            element = element.offsetParent
+        } while ( element != physicsEl );
 
-        } while ( element = element.offsetParent );
 
         return [ x, y, width, height ];
     }

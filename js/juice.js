@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 
-var canFormBreak = false;
+var canFormBreak = true;
 var physicsOn = true;
 var formBroken = false;
 var physicsEl = document.querySelector("#contact");
@@ -159,17 +159,27 @@ function runPhysics() {
             el.originalLeft = $(el).offset().left - $(physicsEl).offset().left;
             el.originalTop= $(el).offset().top -  $(physicsEl).offset().top;
 
-            var myEL = Physics.body('convex-polygon', {
-                x: $(el).offset().left - $(physicsEl).offset().left + elbr.width/2,
-                y: $(el).offset().top -  $(physicsEl).offset().top  + elbr.height/2,
-                vertices: [
-                    { x: 0, y: 0 },
-                    { x: elbr.width, y: 0 },
-                    { x: elbr.width, y: elbr.height },
-                    { x: 0, y: properties[3] }
-                ]     ,
-                treatment: "dynamic"
+
+            var myEL = Physics.body('rectangle', {
+                width: elbr.width,
+                height: elbr.height,
+                x: $(el).offset().left - $(physicsEl).offset().left,
+                y: $(el).offset().top -  $(physicsEl).offset().top,
+                vx: 0,
+                cof: 0.99,
+                restitution: 0.99
             });
+            // console.log( $(el).offset().top -  $(physicsEl).offset().top);
+            
+            // var test = document.createElement("div");
+            // test.style.position = "absolute";
+            // test.style.top = $(el).offset().top + "px";
+            // test.style.left = $(el).offset().left + "px";
+            // test.style.width = elbr.width + "px";
+            // test.style.height = elbr.height + "px";
+            // test.style.background = "purple";
+            // document.body.appendChild(test);
+
             el.style.position = "absolute";
             el.style.top = 0;
             el.style.left = 0;
@@ -215,6 +225,10 @@ function runPhysics() {
         Physics.util.ticker.on(function (time) {
             if (physicsOn){
                 world.step(time);
+                //DEBUG
+                setTimeout(function(){
+                    // physicsOn = false;
+                },50);
             }
         });
 

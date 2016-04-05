@@ -131,6 +131,14 @@ function runPhysics() {
         var viewWidth = pebr.width;
         var viewHeight = pebr.height;
 
+        var renderer = Physics.renderer('dom', {
+            el: physicsEl,
+            width: viewWidth,
+            height: viewHeight,
+            autoResize: false,
+            meta: false // don't display meta data
+        });
+
         var w = window,
             d = document,
             e = d.documentElement,
@@ -171,7 +179,6 @@ function runPhysics() {
 
             physicsElements.push(el);
         }
-
         world.add([
             Physics.behavior('constant-acceleration')
             ,Physics.behavior('body-impulse-response')
@@ -197,15 +204,6 @@ function runPhysics() {
 
         //world.add( attractor );
 
-
-
-        var renderer = Physics.renderer('dom', {
-            el: physicsEl,
-            width: viewWidth,
-            height: viewHeight,
-            autoResize: false,
-            meta: false // don't display meta data
-        });
 
         // add the renderer
         world.add(renderer);

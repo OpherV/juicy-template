@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
 
-var canFormBreak = true;
+var canFormBreak = false;
 var physicsOn = true;
 var formBroken = false;
 var physicsEl = document.querySelector("#contact");

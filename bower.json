@@ -1,0 +1,26 @@
+{
+  "name": "Juicy Template",
+  "description": "A juicy template based on my talk Web Sites are Basically Video Games Waiting To Happen",
+  "main": "",
+  "authors": [
+    "Opher Vishnia"
+  ],
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE"
+  },
+  "homepage": "https://github.com/OpherV/juicy-template",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Proton": "proton#~2.1.0",
+    "proton": "alpha1.0.0",
+    "PhysicsJS": "0.7.0"
+  }
+}
